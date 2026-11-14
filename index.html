@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Календар погоди та настрою</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    background: #fff4c7;
+    color: #39445b;
+    text-align: center;
+    transition: background 0.5s;
+    padding: 20px;
+}
+
+.container {
+    max-width: 950px;
+    margin: auto;
+}
+
+h1 {
+    font-size: 36px;
+    color: #ff8c42;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    font-size: 20px;
+    margin-bottom: 25px;
+}
+
+.section {
+    background: rgba(255,255,255,0.85);
+    border-radius: 25px;
+    padding: 20px;
+    margin: 18px 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+h2 {
+    font-size: 25px;
+    margin-top: 0;
+    color: #5364a5;
+}
+
+.options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.option {
+    border: 3px solid transparent;
+    border-radius: 20px;
+    padding: 15px 18px;
+    min-width: 125px;
+    background: #f1f4ff;
+    cursor: pointer;
+    font-size: 19px;
+    font-weight: bold;
+    color: #39445b;
+    transition: 0.2s;
+}
+
+.option:hover {
+    transform: translateY(-4px);
+    background: #e2e8ff;
+}
+
+.option.selected {
+    border-color: #ff9d42;
+    background: #ffe5a8;
+    transform: scale(1.05);
+}
+
+.emoji {
+    display: block;
+    font-size: 42px;
+    margin-bottom: 7px;
+}
+
+.result {
+    background: white;
+    border: 4px dashed #ffbb55;
+    border-radius: 25px;
+    padding: 25px;
+    margin-top: 25px;
+}
+
+.result h2 {
+    color: #ff8c42;
+}
+
+.result-text {
+    font-size: 27px;
+    font-weight: bold;
+    line-height: 1.5;
+    color: #5364a5;
+}
+
+.result-emoji {
+    font-size: 55px;
+    margin: 10px;
+}
+
+.reset {
+    background: #ff9d42;
+    border: none;
+    border-radius: 18px;
+    padding: 15px 30px;
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 20px;
+}
+
+.reset:hover {
+    background: #ed8128;
+}
+
+footer {
+    font-size: 16px;
+    margin: 20px;
+    color: #69738c;
+}
+
+@media (max-width: 600px) {
+    h1 { font-size: 28px; }
+    .option { min-width: 105px; font-size: 16px; }
+    .result-text { font-size: 22px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🌈 Календар погоди та настрою</h1>
+    <div class="subtitle">
+        Дізнаймося, який сьогодні день! ☀️
+    </div>
+
+    <!-- ПОГОДА -->
+    <div class="section">
+        <h2>🌤 Яка сьогодні погода?</h2>
+        <div class="options" id="weather">
+            <button class="option" data-value="sunny">
+                <span class="emoji">☀️</span>Сонячно
+            </button>
+            <button class="option" data-value="rain">
+                <span class="emoji">🌧️</span>Дощ
+            </button>
+            <button class="option" data-value="cloud">
+                <span class="emoji">☁️</span>Хмарно
+            </button>
+            <button class="option" data-value="snow">
+                <span class="emoji">❄️</span>Сніг
+            </button>
+            <button class="option" data-value="wind">
+                <span class="emoji">🌬️</span>Вітер
+            </button>
+        </div>
+    </div>
+
+    <!-- ДЕНЬ ТИЖНЯ -->
+    <div class="section">
+        <h2>📅 Який сьогодні день?</h2>
+        <div class="options" id="day">
+            <button class="option" data-value="Понеділок">Понеділок</button>
+            <button class="option" data-value="Вівторок">Вівторок</button>
+            <button class="option" data-value="Середа">Середа</button>
+            <button class="option" data-value="Четвер">Четвер</button>
+            <button class="option" data-value="П'ятниця">П'ятниця</button>
+        </div>
+    </div>
+
+    <!-- НАСТРІЙ -->
+    <div class="section">
+        <h2>💛 Який у тебе сьогодні настрій?</h2>
+        <div class="options" id="mood">
+            <button class="option" data-value="happy">
+                <span class="emoji">😃</span>Веселий
+            </button>
+            <button class="option" data-value="dreamy">
+                <span class="emoji">😇</span>Мрійливий
+            </button>
+            <button class="option" data-value="active">
+                <span class="emoji">⚡</span>Бадьорий
+            </button>
+        </div>
+    </div>
+
+    <!-- РЕЗУЛЬТАТ -->
+    <div class="result">
+        <h2>✨ Наш сьогоднішній день ✨</h2>
+        <div class="result-emoji" id="resultEmoji">🌈</div>
+        <div class="result-text" id="resultText">
+            Обери погоду, день тижня та свій настрій!
+        </div>
+    </div>
+
+    <button class="reset" onclick="resetCalendar()">
+        🔄 Почати спочатку
+    </button>
+
+    <footer>
+        🌸 Гарного дня та чудового настрою! 🌸
+    </footer>
+
+</div>
+
+<script>
+const selections = {
+    weather: null,
+    day: null,
+    mood: null
+};
+
+const weatherData = {
+    sunny: {
+        name: "сонячний",
+        emoji: "☀️",
+        color: "#fff0a8"
+    },
+    rain: {
+        name: "дощовий",
+        emoji: "🌧️",
+        color: "#c9e5fa"
+    },
+    cloud: {
+        name: "хмарний",
+        emoji: "☁️",
+        color: "#e0e5ef"
+    },
+    snow: {
+        name: "сніжний",
+        emoji: "❄️",
+        color: "#d9f4ff"
+    },
+    wind: {
+        name: "вітряний",
+        emoji: "🌬️",
+        color: "#d5f2dc"
+    }
+};
+
+const moodData = {
+    happy: {
+        name: "веселий",
+        phrase: "з чудовим настроєм!",
+        emoji: "😃"
+    },
+    dreamy: {
+        name: "мрійливий",
+        phrase: "з мрійливим настроєм!",
+        emoji: "😇"
+    },
+    active: {
+        name: "бадьорий",
+        phrase: "з бадьорим настроєм!",
+        emoji: "⚡"
+    }
+};
+
+// Вибір елементів
+document.querySelectorAll(".options").forEach(group => {
+    group.querySelectorAll(".option").forEach(button => {
+        button.addEventListener("click", () => {
+
+            group.querySelectorAll(".option").forEach(item => {
+                item.classList.remove("selected");
+            });
+
+            button.classList.add("selected");
+
+            const type = group.id;
+            selections[type] = button.dataset.value;
+
+            updateCalendar();
+        });
+    });
+});
+
+// Оновлення календаря
+function updateCalendar() {
+
+    const weather = selections.weather;
+    const day = selections.day;
+    const mood = selections.mood;
+
+    // Зміна кольору фону
+    if (weather) {
+        document.body.style.background =
+            weatherData[weather].color;
+    }
+
+    const resultText = document.getElementById("resultText");
+    const resultEmoji = document.getElementById("resultEmoji");
+
+    // Поступове формування результату
+    if (weather && day && mood) {
+
+        const w = weatherData[weather];
+        const m = moodData[mood];
+
+        resultText.textContent =
+            `Сьогодні ${w.name} ${day.toLowerCase()} ${m.phrase}`;
+
+        resultEmoji.textContent =
+            w.emoji + " " + m.emoji;
+
+    } else {
+
+        let message = "Сьогодні ";
+
+        if (weather) {
+            message += weatherData[weather].name + " день";
+        }
+
+        if (day) {
+            message += (weather ? ", " : "") +
+                day.toLowerCase();
+        }
+
+        if (mood) {
+            message += (weather || day ? " " : "") +
+                m.phrase;
+        }
+
+        if (!weather && !day && !mood) {
+            message = "Обери погоду, день тижня та свій настрій!";
+        }
+
+        resultText.textContent = message;
+
+        resultEmoji.textContent =
+            weather ? weatherData[weather].emoji :
+            mood ? moodData[mood].emoji : "🌈";
+    }
+}
+
+// Скидання календаря
+function resetCalendar() {
+
+    selections.weather = null;
+    selections.day = null;
+    selections.mood = null;
+
+    document.querySelectorAll(".option").forEach(button => {
+        button.classList.remove("selected");
+    });
+
+    document.body.style.background = "#fff4c7";
+
+    document.getElementById("resultText").textContent =
+        "Обери погоду, день тижня та свій настрій!";
+
+    document.getElementById("resultEmoji").textContent = "🌈";
+}
+</script>
+
+</body>
+</html>
